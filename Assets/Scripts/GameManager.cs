@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (this.lives <= 9 && Input.anyKeyDown)
+        if (this.lives <= 0 && Input.anyKeyDown)
         {
             NewGame();
         }
@@ -46,10 +46,10 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < this.ghosts.Length; i++)
         {
-            this.ghosts[i].gameObject.SetActive(true);
+            this.ghosts[i].ResetState();
         }
 
-        this.pacman.gameObject.SetActive(true);
+        pacman.ResetState();
     }
 
     private void GameOver()
@@ -85,7 +85,7 @@ public class GameManager : MonoBehaviour
 
         if (this.lives > 0)
         {
-            Invoke(nameof(ResetState), 3.0f);
+            Invoke(nameof(ResetState), 1.3f);
             return;
         }
         GameOver();
