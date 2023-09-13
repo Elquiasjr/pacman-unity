@@ -1,18 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Pellet : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public int points = 10;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    protected virtual void Eat(){
+        FindObjectOfType<GameManager>().PelletEaten(this);
+    }
+    private void OnTriggerEnter2D(Collider2D other){
+        if(other.gameObject.layer == LayerMask.NameToLayer("Pacman")){
+            Eat();
+        }
     }
 }
