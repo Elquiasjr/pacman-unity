@@ -1,12 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
     public Ghost[] ghosts;
     public Pacman pacman;
     public Transform pellets;
+
+    public TextMeshProUGUI scoreText;
 
     public int ghostMultiplier { get; private set; } = 1;
 
@@ -36,6 +37,7 @@ public class GameManager : MonoBehaviour
 
     private void NewRound()
     {
+        scoreText.text = score.ToString();
         foreach (Transform pellet in this.pellets)
         {
             pellet.gameObject.SetActive(true);
@@ -69,6 +71,7 @@ public class GameManager : MonoBehaviour
     private void SetScore(int score)
     {
         this.score = score;
+        scoreText.text = score.ToString();
     }
 
     private void SetLives(int lives)
@@ -100,11 +103,12 @@ public class GameManager : MonoBehaviour
     public void PelletEaten(Pellet pellet)
     {
         pellet.gameObject.SetActive(false);
-        SetScore(this.score + pellet.points);
+        SetScore(score + pellet.points);
+
 
         if (!HasRemainingPellets())
         {
-            this.pacman.gameObject.SetActive(false);
+            pacman.gameObject.SetActive(false);
             Invoke(nameof(NewRound), 3.0f);
         }
     }
