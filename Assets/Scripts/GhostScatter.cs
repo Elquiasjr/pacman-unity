@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class GhostScatter : GhostBehavior
 {
-    private void onDisabled()
+    private void OnDisable()
     {
         this.ghost.chase.Enable();
     }
