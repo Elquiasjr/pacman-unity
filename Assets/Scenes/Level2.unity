@@ -196,7 +196,7 @@ TilemapRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 58616441}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -1137,6 +1137,10 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 1320227648}
+    - target: {fileID: 4650757213555736366, guid: fe8d6d98136a6f8a99dde3299bfd0ad8, type: 3}
+      propertyPath: specificChase
+      value: 
+      objectReference: {fileID: 192879871}
     - target: {fileID: 4652614884317458010, guid: fe8d6d98136a6f8a99dde3299bfd0ad8, type: 3}
       propertyPath: duration
       value: 8
@@ -1386,6 +1390,10 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 1320227648}
+    - target: {fileID: 7390372983194333940, guid: 955fd0ce65d7f5e788ec61e79eef03ae, type: 3}
+      propertyPath: specificChase
+      value: 
+      objectReference: {fileID: 529831193}
     - target: {fileID: 7391610469322974080, guid: 955fd0ce65d7f5e788ec61e79eef03ae, type: 3}
       propertyPath: duration
       value: 2
@@ -7656,6 +7664,10 @@ PrefabInstance:
       propertyPath: obstacleLayer.m_Bits
       value: 512
       objectReference: {fileID: 0}
+    - target: {fileID: 4910852135689781719, guid: a5dabf93b2a069fd88c47a9f23a4527b, type: 3}
+      propertyPath: specificChase
+      value: 
+      objectReference: {fileID: 1493379504}
     - target: {fileID: 4917225327911948451, guid: a5dabf93b2a069fd88c47a9f23a4527b, type: 3}
       propertyPath: insideTransform
       value: 
@@ -10457,6 +10469,10 @@ PrefabInstance:
       propertyPath: outsideTransform
       value: 
       objectReference: {fileID: 4033634}
+    - target: {fileID: 6130569485081355803, guid: 8d0717c3e01d9b2f8a2f4b2b8578273f, type: 3}
+      propertyPath: specificChase
+      value: 
+      objectReference: {fileID: 1994816946}
     - target: {fileID: 6875127778786478030, guid: 8d0717c3e01d9b2f8a2f4b2b8578273f, type: 3}
       propertyPath: m_RootOrder
       value: 4
