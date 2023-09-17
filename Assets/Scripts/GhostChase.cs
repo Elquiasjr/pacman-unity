@@ -4,6 +4,7 @@ using UnityEngine;
 public class GhostChase : GhostBehavior
 {
     public TypeChase specificChase { get; private set; }
+
     private void OnDisable()
     {
         ghost.scatter.Enable();
@@ -16,6 +17,5 @@ public class GhostChase : GhostBehavior
     private void OnEnable()
     {
         specificChase = GetComponent<TypeChase>();
-
     }
 }
