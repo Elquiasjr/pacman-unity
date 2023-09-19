@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using Mono.Cecil;
 using UnityEngine;
 
 public class GhostChase : GhostBehavior
@@ -22,7 +20,7 @@ public class GhostChase : GhostBehavior
         switch (ghost.name)
         {
             case "Ghost_Blinky":
-                this.ChaseAStar(other, ghost);
+                this.GhostChaseDefault(other, ghost);
                 break;
             case "Ghost_Pinky":
                 this.ChaseFront(other, ghost);
@@ -88,27 +86,6 @@ public class GhostChase : GhostBehavior
             }
 
             ghost.movement.SetDirection(direction);
-        }
-    }
-
-    private void ChaseAStar(Collider2D other, Ghost ghost)
-    {
-        Node node = other.GetComponent<Node>();
-
-        List<Node> openList = new List<Node>();
-        List<Node> closedList = new List<Node>();
-
-        if (node != null && enabled && !ghost.frightened.enabled)
-        {
-            foreach (Vector2 avaliableDirection in node.availableDirections)
-            {
-                Debug.Log("Avaliable Direction: " + avaliableDirection);
-                Node nextNode = node.GetNextNode(avaliableDirection);
-                if (nextNode != null)
-                {
-                    openList.Add(nextNode);
-                }
-            }
         }
     }
 }

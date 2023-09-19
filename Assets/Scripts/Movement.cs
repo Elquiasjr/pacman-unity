@@ -10,6 +10,8 @@ public class Movement : MonoBehaviour
     public LayerMask obstacleLayer;
     public Rigidbody2D rigidBody { get; private set; }
 
+    public CircleCollider2D collider2d { get; private set; }
+
     public Vector2 direction { get; private set; }
     public Vector2 nextDirection { get; private set; }
 
@@ -18,6 +20,7 @@ public class Movement : MonoBehaviour
     private void Awake()
     {
         this.rigidBody = GetComponent<Rigidbody2D>();
+        this.collider2d = GetComponent<CircleCollider2D>();
         this.startingPosition = this.transform.position;
     }
 

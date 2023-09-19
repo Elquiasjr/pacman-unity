@@ -496,6 +496,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 367204960}
+  - component: {fileID: 367204961}
+  - component: {fileID: 367204962}
   m_Layer: 10
   m_Name: Outside
   m_TagString: Untagged
@@ -518,6 +520,50 @@ Transform:
   m_Father: {fileID: 450955095}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &367204961
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 367204959}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.5, y: 1}
+  m_EdgeRadius: 0
+--- !u!114 &367204962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 367204959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e0b3a5dfcfaeb2498de719d1283babf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  nodeLayer:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!1 &450955094
 GameObject:
   m_ObjectHideFlags: 0
@@ -1650,9 +1696,33 @@ PrefabInstance:
       propertyPath: initialBehavior
       value: 
       objectReference: {fileID: 1883804447}
+    - target: {fileID: 105563541690124006, guid: a5dabf93b2a069fd88c47a9f23a4527b, type: 3}
+      propertyPath: path.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 105563541690124006, guid: a5dabf93b2a069fd88c47a9f23a4527b, type: 3}
+      propertyPath: obstacleLayer.m_Bits
+      value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 105563541690124006, guid: a5dabf93b2a069fd88c47a9f23a4527b, type: 3}
+      propertyPath: path.Array.data[0].y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 105563541690124006, guid: a5dabf93b2a069fd88c47a9f23a4527b, type: 3}
+      propertyPath: path.Array.data[1].x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 105563541690124006, guid: a5dabf93b2a069fd88c47a9f23a4527b, type: 3}
+      propertyPath: path.Array.data[1].y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3644160241851567341, guid: a5dabf93b2a069fd88c47a9f23a4527b, type: 3}
       propertyPath: obstacleLayer.m_Bits
       value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 4410857340845923730, guid: a5dabf93b2a069fd88c47a9f23a4527b, type: 3}
+      propertyPath: m_BodyType
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4917225327911948451, guid: a5dabf93b2a069fd88c47a9f23a4527b, type: 3}
       propertyPath: insideTransform
@@ -1713,6 +1783,10 @@ PrefabInstance:
     - target: {fileID: 8592482497321002425, guid: a5dabf93b2a069fd88c47a9f23a4527b, type: 3}
       propertyPath: duration
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8958425424217326177, guid: a5dabf93b2a069fd88c47a9f23a4527b, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a5dabf93b2a069fd88c47a9f23a4527b, type: 3}

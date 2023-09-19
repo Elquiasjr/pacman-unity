@@ -2,10 +2,15 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Node : MonoBehaviour
 {
     public LayerMask obstacleLayer;
     public LayerMask nodeLayer;
+
+    public float fCost { get; set; }
+
+    public Vector2 directionTo { get; set; }
     public List<Vector2> availableDirections { get; private set; }
 
     private void Start()

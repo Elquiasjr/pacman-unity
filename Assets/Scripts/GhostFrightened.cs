@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GhostFrightened : GhostBehavior
@@ -5,6 +7,8 @@ public class GhostFrightened : GhostBehavior
     public SpriteRenderer body;
     public SpriteRenderer eyes;
     public SpriteRenderer blue;
+
+    public bool hasCalled { get; private set; }
     public SpriteRenderer white;
 
     public bool eaten { get; private set; }
@@ -46,11 +50,13 @@ public class GhostFrightened : GhostBehavior
     {
         eaten = true;
 
-        Vector3 position = ghost.home.insideTransform.position;
-        position.z = ghost.transform.position.z;
-        ghost.transform.position = position;
-        ghost.home.Enable(duration);
 
+        // Vector3 position = ghost.home.insideTransform.position;
+        // position.z = ghost.transform.position.z;
+        // ghost.transform.position = position;
+        // ghost.home.Enable(duration);
+
+        ghost.scatter.Disable();
         body.enabled = false;
         eyes.enabled = true;
         blue.enabled = false;
@@ -72,19 +78,70 @@ public class GhostFrightened : GhostBehavior
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+
         if (collision.gameObject.layer == LayerMask.NameToLayer("Pacman"))
         {
             if (enabled)
             {
                 Eaten();
+                ghost.movement.speedMultplier = 2f;
+                Physics2D.IgnoreCollision(collision.gameObject.GetComponent<Pacman>().movement.collider2d, ghost.movement.collider2d);
+
+                float maxDistance = float.MinValue;
+                Vector2 direction = Vector2.zero;
+                foreach (Vector2 avaliableDirection in avaliableDirections())
+                {
+                    Vector3 newPosition = transform.position + new Vector3(avaliableDirection.x, avaliableDirection.y, 0f);
+
+                    float distance = (ghost.target.position - newPosition).sqrMagnitude;
+
+                    if (distance > maxDistance)
+                    {
+                        maxDistance = distance;
+                        direction = avaliableDirection;
+                    }
+                }
+                Debug.Log(direction);
+                ghost.movement.SetDirection(direction, true);
+
             }
         }
+    }
+
+    private List<Vector2> avaliableDirections()
+    {
+        List<Vector2> availableDirections = new List<Vector2>();
+
+        RaycastHit2D hitUp = Physics2D.BoxCast(this.transform.position, Vector2.one * 0.7f, 0.0f, Vector2.up, 1.0f, ghost.obstacleLayer);
+        RaycastHit2D hitDown = Physics2D.BoxCast(this.transform.position, Vector2.one * 0.7f, 0.0f, Vector2.down, 1.0f, ghost.obstacleLayer);
+        RaycastHit2D hitLeft = Physics2D.BoxCast(this.transform.position, Vector2.one * 0.7f, 0.0f, Vector2.left, 1.0f, ghost.obstacleLayer);
+        RaycastHit2D hitRight = Physics2D.BoxCast(this.transform.position, Vector2.one * 0.7f, 0.0f, Vector2.right, 1.0f, ghost.obstacleLayer);
+
+        if (hitUp.collider == null)
+        {
+            availableDirections.Add(Vector2.up);
+        }
+        if (hitDown.collider == null)
+        {
+            availableDirections.Add(Vector2.down);
+        }
+        if (hitLeft.collider == null)
+        {
+            availableDirections.Add(Vector2.left);
+        }
+        if (hitRight.collider == null)
+        {
+            availableDirections.Add(Vector2.right);
+        }
+
+        return availableDirections;
+
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
         Node node = other.GetComponent<Node>();
 
-        if (node != null && enabled)
+        if (node != null && enabled && !eaten)
         {
             Vector2 direction = Vector2.zero;
             float maxDistance = float.MinValue;
@@ -103,6 +160,37 @@ public class GhostFrightened : GhostBehavior
             }
 
             ghost.movement.SetDirection(direction);
+        }
+        if (eaten && ghost.path.Count == 0)
+        {
+            ghost.BackHomeAStar(node);
+            hasCalled = true;
+        }
+        if (other.GetComponent<Node>() != null && eaten)
+        {
+            if (other.gameObject.name == "Outside")
+            {
+                ghost.movement.SetDirection(Vector2.down, true);
+                Debug.Break();
+
+                ghost.transform.position = new Vector3(ghost.home.insideTransform.position.x, ghost.home.insideTransform.position.y, 0f);
+                Disable();
+                ghost.home.Enable(duration);
+                //set collision back to normal
+                Physics2D.IgnoreCollision(ghost.target.gameObject.GetComponent<Pacman>().movement.collider2d, ghost.movement.collider2d, false);
+                return;
+            }
+            if (other.gameObject.name == "Inside")
+            {
+                return;
+            }
+
+        }
+        if (eaten && ghost.path.Count > 0 && other.gameObject.layer == LayerMask.NameToLayer("Node"))
+        {
+
+            ghost.movement.SetDirection(ghost.path[0]);
+            ghost.path.RemoveAt(0);
         }
     }
 
