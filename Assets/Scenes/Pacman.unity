@@ -606,7 +606,7 @@ TilemapRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 450955094}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -1783,6 +1783,10 @@ PrefabInstance:
     - target: {fileID: 8592482497321002425, guid: a5dabf93b2a069fd88c47a9f23a4527b, type: 3}
       propertyPath: duration
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8958425424217326177, guid: a5dabf93b2a069fd88c47a9f23a4527b, type: 3}
+      propertyPath: m_Radius
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8958425424217326177, guid: a5dabf93b2a069fd88c47a9f23a4527b, type: 3}
       propertyPath: m_Enabled

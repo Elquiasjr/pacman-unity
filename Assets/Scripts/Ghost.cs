@@ -10,7 +10,6 @@ public class Ghost : MonoBehaviour
     public GhostScatter scatter { get; private set; }
     public GhostChase chase { get; private set; }
 
-    public LayerMask obstacleLayer;
     public GhostFrightened frightened { get; private set; }
 
     public List<Vector2> path { get; private set; } = new List<Vector2>();
@@ -74,14 +73,15 @@ public class Ghost : MonoBehaviour
         Vector3 outsideTransform = home.outsideTransform.transform.position;
 
         Node current = node;
+        current.hCost = (current.transform.position - home.outsideTransform.transform.position).sqrMagnitude;
+        current.gCost = 0;
+        current.fCost = float.MaxValue;
         int i = 0;
 
         if (node != null && enabled)
         {
             while (i < 50)
             {
-                current.fCost = 0 + Vector2.Distance(current.transform.position, home.insideTransform.transform.position);
-
                 foreach (Vector2 avPosition in current.availableDirections)
                 {
                     Node nextNode = current.GetNextNode(avPosition);
@@ -89,20 +89,25 @@ public class Ghost : MonoBehaviour
                     {
                         if (nextNode.transform.position == outsideTransform)
                         {
-                            Debug.Log(name + " Found " + nextNode.transform.position);
-                            Debug.Break();
                             path.Add(avPosition);
                             path.Add(Vector2.down);
                             return;
                         }
                         else
                         {
-                            nextNode.directionTo = avPosition;
-                            float hCost = Vector2.Distance(nextNode.transform.position, home.insideTransform.transform.position);
-                            float gCost = Vector2.Distance(nextNode.transform.position, current.transform.position);
 
+                            nextNode.directionTo = avPosition;
+                            float hCost = (nextNode.transform.position - outsideTransform).sqrMagnitude;
+                            int gCost = 1 + current.gCost;
+                            nextNode.gCost = gCost;
+                            nextNode.hCost = hCost;
                             nextNode.fCost = hCost + gCost;
-                            openList.Add(nextNode);
+
+                            if (!closedList.Contains(nextNode) && !openList.Contains(nextNode))
+                            {
+                                openList.Add(nextNode);
+                            }
+
                         }
                     }
                 }
@@ -110,9 +115,12 @@ public class Ghost : MonoBehaviour
                 openList.Sort((x, y) => x.fCost.CompareTo(y.fCost));
 
                 current = openList[0];
-                path.Add(openList[0].directionTo);
-                openList.Remove(current);
-
+                if (!closedList.Contains(current))
+                {
+                    path.Add(openList[0].directionTo);
+                    openList.RemoveAt(0);
+                    closedList.Add(current);
+                }
                 i++;
             }
 

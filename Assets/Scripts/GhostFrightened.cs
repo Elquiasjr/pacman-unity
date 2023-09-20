@@ -84,24 +84,23 @@ public class GhostFrightened : GhostBehavior
             if (enabled)
             {
                 Eaten();
-                ghost.movement.speedMultplier = 2f;
+                ghost.movement.speedMultplier = 3f;
                 Physics2D.IgnoreCollision(collision.gameObject.GetComponent<Pacman>().movement.collider2d, ghost.movement.collider2d);
 
-                float maxDistance = float.MinValue;
+                float minDistance = float.MaxValue;
                 Vector2 direction = Vector2.zero;
                 foreach (Vector2 avaliableDirection in avaliableDirections())
                 {
                     Vector3 newPosition = transform.position + new Vector3(avaliableDirection.x, avaliableDirection.y, 0f);
 
-                    float distance = (ghost.target.position - newPosition).sqrMagnitude;
+                    float distance = (ghost.home.insideTransform.position - newPosition).sqrMagnitude;
 
-                    if (distance > maxDistance)
+                    if (distance < minDistance)
                     {
-                        maxDistance = distance;
+                        minDistance = distance;
                         direction = avaliableDirection;
                     }
                 }
-                Debug.Log(direction);
                 ghost.movement.SetDirection(direction, true);
 
             }
@@ -112,10 +111,10 @@ public class GhostFrightened : GhostBehavior
     {
         List<Vector2> availableDirections = new List<Vector2>();
 
-        RaycastHit2D hitUp = Physics2D.BoxCast(this.transform.position, Vector2.one * 0.7f, 0.0f, Vector2.up, 1.0f, ghost.obstacleLayer);
-        RaycastHit2D hitDown = Physics2D.BoxCast(this.transform.position, Vector2.one * 0.7f, 0.0f, Vector2.down, 1.0f, ghost.obstacleLayer);
-        RaycastHit2D hitLeft = Physics2D.BoxCast(this.transform.position, Vector2.one * 0.7f, 0.0f, Vector2.left, 1.0f, ghost.obstacleLayer);
-        RaycastHit2D hitRight = Physics2D.BoxCast(this.transform.position, Vector2.one * 0.7f, 0.0f, Vector2.right, 1.0f, ghost.obstacleLayer);
+        RaycastHit2D hitUp = Physics2D.BoxCast(this.transform.position, Vector2.one * 0.5f, 0.0f, Vector2.up, 1.0f, ghost.movement.obstacleLayer);
+        RaycastHit2D hitDown = Physics2D.BoxCast(this.transform.position, Vector2.one * 0.5f, 0.0f, Vector2.down, 1.0f, ghost.movement.obstacleLayer);
+        RaycastHit2D hitLeft = Physics2D.BoxCast(this.transform.position, Vector2.one * 0.5f, 0.0f, Vector2.left, 1.0f, ghost.movement.obstacleLayer);
+        RaycastHit2D hitRight = Physics2D.BoxCast(this.transform.position, Vector2.one * 0.5f, 0.0f, Vector2.right, 1.0f, ghost.movement.obstacleLayer);
 
         if (hitUp.collider == null)
         {
@@ -137,9 +136,12 @@ public class GhostFrightened : GhostBehavior
         return availableDirections;
 
     }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         Node node = other.GetComponent<Node>();
+
+
 
         if (node != null && enabled && !eaten)
         {
@@ -161,36 +163,43 @@ public class GhostFrightened : GhostBehavior
 
             ghost.movement.SetDirection(direction);
         }
+
         if (eaten && ghost.path.Count == 0)
         {
             ghost.BackHomeAStar(node);
             hasCalled = true;
         }
-        if (other.GetComponent<Node>() != null && eaten)
+
+
+        if (node != null && eaten)
         {
-            if (other.gameObject.name == "Outside")
+            if (node.name == "Outside")
             {
                 ghost.movement.SetDirection(Vector2.down, true);
-                Debug.Break();
 
                 ghost.transform.position = new Vector3(ghost.home.insideTransform.position.x, ghost.home.insideTransform.position.y, 0f);
                 Disable();
                 ghost.home.Enable(duration);
-                //set collision back to normal
+
                 Physics2D.IgnoreCollision(ghost.target.gameObject.GetComponent<Pacman>().movement.collider2d, ghost.movement.collider2d, false);
                 return;
             }
-            if (other.gameObject.name == "Inside")
+            if (node.name == "Inside")
             {
                 return;
             }
 
         }
-        if (eaten && ghost.path.Count > 0 && other.gameObject.layer == LayerMask.NameToLayer("Node"))
-        {
 
-            ghost.movement.SetDirection(ghost.path[0]);
-            ghost.path.RemoveAt(0);
+        if (eaten && ghost.path.Count > 0 && node.gameObject.layer == LayerMask.NameToLayer("Node"))
+        {
+            if (node.availableDirections.Contains(ghost.path[0]))
+            {
+                Debug.Log(ghost.path[0]);
+                ghost.movement.SetDirection(ghost.path[0]);
+                ghost.path.RemoveAt(0);
+            }
+
         }
     }
 
