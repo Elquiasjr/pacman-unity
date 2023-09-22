@@ -8,7 +8,7 @@ public class GhostFrightened : GhostBehavior
     public SpriteRenderer eyes;
     public SpriteRenderer blue;
 
-    public bool hasCalled { get; private set; }
+    private bool isHome;
     public SpriteRenderer white;
 
     public bool eaten { get; private set; }
@@ -27,12 +27,17 @@ public class GhostFrightened : GhostBehavior
 
     public override void Disable()
     {
+        if (eaten && !isHome)
+        {
+            return;
+        }
         base.Disable();
 
         body.enabled = true;
         eyes.enabled = true;
         blue.enabled = false;
         white.enabled = false;
+
     }
 
     private void Flash()
@@ -49,6 +54,7 @@ public class GhostFrightened : GhostBehavior
     private void Eaten()
     {
         eaten = true;
+        duration = 5f;
 
 
         // Vector3 position = ghost.home.insideTransform.position;
@@ -167,7 +173,6 @@ public class GhostFrightened : GhostBehavior
         if (eaten && ghost.path.Count == 0)
         {
             ghost.BackHomeAStar(node);
-            hasCalled = true;
         }
 
 
@@ -178,6 +183,7 @@ public class GhostFrightened : GhostBehavior
                 ghost.movement.SetDirection(Vector2.down, true);
 
                 ghost.transform.position = new Vector3(ghost.home.insideTransform.position.x, ghost.home.insideTransform.position.y, 0f);
+                isHome = true;
                 Disable();
                 ghost.home.Enable(duration);
 
@@ -196,6 +202,7 @@ public class GhostFrightened : GhostBehavior
             if (node.availableDirections.Contains(ghost.path[0]))
             {
                 Debug.Log(ghost.path[0]);
+                Debug.Break();
                 ghost.movement.SetDirection(ghost.path[0]);
                 ghost.path.RemoveAt(0);
             }
