@@ -33,6 +33,7 @@ public class GhostFrightened : GhostBehavior
         }
         base.Disable();
 
+        Physics2D.IgnoreCollision(ghost.target.gameObject.GetComponent<Pacman>().movement.collider2d, ghost.movement.collider2d, false);
         body.enabled = true;
         eyes.enabled = true;
         blue.enabled = false;
@@ -201,8 +202,6 @@ public class GhostFrightened : GhostBehavior
         {
             if (node.availableDirections.Contains(ghost.path[0]))
             {
-                Debug.Log(ghost.path[0]);
-                Debug.Break();
                 ghost.movement.SetDirection(ghost.path[0]);
                 ghost.path.RemoveAt(0);
             }
