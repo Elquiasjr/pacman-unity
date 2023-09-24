@@ -16,6 +16,9 @@ public class Ghost : MonoBehaviour
     public GhostBehavior initialBehavior;
     public Transform target;
 
+
+    public NodeTree tree { get; private set; }
+
     public int points = 200;
 
     private void Awake()
@@ -25,6 +28,7 @@ public class Ghost : MonoBehaviour
         scatter = GetComponent<GhostScatter>();
         chase = GetComponent<GhostChase>();
         frightened = GetComponent<GhostFrightened>();
+        tree = gameObject.AddComponent<NodeTree>();
     }
 
     private void Start()
@@ -68,62 +72,63 @@ public class Ghost : MonoBehaviour
 
     public void BackHomeAStar(Node node)
     {
-        List<Node> openList = new();
-        List<Node> closedList = new();
         Vector3 outsideTransform = home.outsideTransform.transform.position;
-
         Node current = node;
-        current.hCost = (current.transform.position - home.outsideTransform.transform.position).sqrMagnitude;
+        current.hCost = Vector3.Distance(current.transform.position, home.outsideTransform.transform.position);
         current.gCost = 0;
-        current.fCost = float.MaxValue;
+        current.fCost = current.hCost + current.gCost;
+        current.parent = null;
+        current.directionTo = Vector2.zero;
+
+        tree.setRoot(current);
+        bool find = false;
         int i = 0;
 
-        if (node != null && enabled)
+        if (current != null && enabled)
         {
-            while (i < 50)
+            while (!find)
             {
-                foreach (Vector2 avPosition in current.availableDirections)
+                List<Vector2> avaliableDirectionsToAStar = new(current.availableDirections);
+                avaliableDirectionsToAStar.Remove(current.directionTo * -1);
+                foreach (Vector2 avPosition in avaliableDirectionsToAStar)
                 {
                     Node nextNode = current.GetNextNode(avPosition);
                     if (nextNode != null)
                     {
-                        if (nextNode.transform.position == outsideTransform)
+                        nextNode.directionTo = avPosition;
+                        float hCost = Vector3.Distance(nextNode.transform.position, outsideTransform);
+                        int gCost = 1 + current.gCost;
+
+                        nextNode.gCost = gCost;
+                        nextNode.hCost = hCost;
+                        nextNode.fCost = hCost + gCost;
+
+                        current.children.Add(nextNode);
+
+                        nextNode.parent = current;
+
+                        if (nextNode.hCost < 1)
                         {
-                            path.Add(avPosition);
-                            path.Add(Vector2.down);
-                            return;
-                        }
-                        else
-                        {
-
-                            nextNode.directionTo = avPosition;
-                            float hCost = (nextNode.transform.position - outsideTransform).sqrMagnitude;
-                            int gCost = 1 + current.gCost;
-                            nextNode.gCost = gCost;
-                            nextNode.hCost = hCost;
-                            nextNode.fCost = hCost + gCost;
-
-                            if (!closedList.Contains(nextNode) && !openList.Contains(nextNode))
-                            {
-                                openList.Add(nextNode);
-                            }
-
+                            find = true;
+                            break;
                         }
                     }
                 }
-
-                openList.Sort((x, y) => x.fCost.CompareTo(y.fCost));
-
-                current = openList[0];
-                if (!closedList.Contains(current))
-                {
-                    path.Add(openList[0].directionTo);
-                    openList.RemoveAt(0);
-                    closedList.Add(current);
-                }
+                current = tree.getLeafs().First();
                 i++;
             }
 
+            current = tree.getLeafs().First();
+
+            while (current.parent != null)
+            {
+
+                path.Add(current.directionTo);
+                current = current.parent;
+            }
+            tree.resetNodes();
+
+            path.Reverse();
         }
     }
 

@@ -8,6 +8,10 @@ public class Node : MonoBehaviour
     public LayerMask obstacleLayer;
     public LayerMask nodeLayer;
 
+    public List<Node> children;
+
+    public Node parent;
+
     public float fCost { get; set; }
     public int gCost { get; set; }
     public float hCost { get; set; }
@@ -23,6 +27,7 @@ public class Node : MonoBehaviour
         CheckAvaliableDirection(Vector2.down);
         CheckAvaliableDirection(Vector2.left);
         CheckAvaliableDirection(Vector2.right);
+        children = new List<Node>();
 
     }
 
@@ -50,5 +55,15 @@ public class Node : MonoBehaviour
         }
 
         return null;
+    }
+
+    public void ResetState()
+    {
+        this.fCost = 0;
+        this.gCost = 0;
+        this.hCost = 0;
+        this.parent = null;
+        this.directionTo = Vector2.zero;
+        this.children = new List<Node>();
     }
 }

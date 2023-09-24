@@ -15,8 +15,8 @@ public class GhostFrightened : GhostBehavior
 
     public override void Enable(float duration)
     {
+        if (eaten) { return; }
         base.Enable(duration);
-        eaten = false;
         body.enabled = false;
         eyes.enabled = false;
         blue.enabled = true;
@@ -37,6 +37,7 @@ public class GhostFrightened : GhostBehavior
         body.enabled = true;
         eyes.enabled = true;
         blue.enabled = false;
+        isHome = false;
         white.enabled = false;
 
     }
@@ -55,13 +56,7 @@ public class GhostFrightened : GhostBehavior
     private void Eaten()
     {
         eaten = true;
-        duration = 5f;
 
-
-        // Vector3 position = ghost.home.insideTransform.position;
-        // position.z = ghost.transform.position.z;
-        // ghost.transform.position = position;
-        // ghost.home.Enable(duration);
 
         ghost.scatter.Disable();
         body.enabled = false;
@@ -74,7 +69,6 @@ public class GhostFrightened : GhostBehavior
     private void OnEnable()
     {
         ghost.movement.speedMultplier = 0.5f;
-        eaten = false;
     }
 
     private void OnDisable()
@@ -88,10 +82,10 @@ public class GhostFrightened : GhostBehavior
 
         if (collision.gameObject.layer == LayerMask.NameToLayer("Pacman"))
         {
-            if (enabled)
+            if (enabled && !eaten)
             {
                 Eaten();
-                ghost.movement.speedMultplier = 3f;
+                ghost.movement.speedMultplier = 2f;
                 Physics2D.IgnoreCollision(collision.gameObject.GetComponent<Pacman>().movement.collider2d, ghost.movement.collider2d);
 
                 float minDistance = float.MaxValue;
@@ -108,7 +102,7 @@ public class GhostFrightened : GhostBehavior
                         direction = avaliableDirection;
                     }
                 }
-                ghost.movement.SetDirection(direction, true);
+                ghost.movement.SetDirection(direction);
 
             }
         }
@@ -148,7 +142,10 @@ public class GhostFrightened : GhostBehavior
     {
         Node node = other.GetComponent<Node>();
 
-
+        if (node != null)
+        {
+            node.ResetState();
+        }
 
         if (node != null && enabled && !eaten)
         {
@@ -171,32 +168,26 @@ public class GhostFrightened : GhostBehavior
             ghost.movement.SetDirection(direction);
         }
 
-        if (eaten && ghost.path.Count == 0)
-        {
-            ghost.BackHomeAStar(node);
-        }
-
-
         if (node != null && eaten)
         {
             if (node.name == "Outside")
             {
-                ghost.movement.SetDirection(Vector2.down, true);
-
-                ghost.transform.position = new Vector3(ghost.home.insideTransform.position.x, ghost.home.insideTransform.position.y, 0f);
+                ghost.transform.position = new Vector3(ghost.home.insideTransform.position.x, ghost.home.insideTransform.position.y, -1f);
                 isHome = true;
+                ghost.movement.SetDirection(Vector2.up, true);
                 Disable();
                 ghost.home.Enable(duration);
 
                 Physics2D.IgnoreCollision(ghost.target.gameObject.GetComponent<Pacman>().movement.collider2d, ghost.movement.collider2d, false);
                 return;
             }
-            if (node.name == "Inside")
-            {
-                return;
-            }
 
         }
+        if (eaten && ghost.path.Count == 0 && !isHome && enabled)
+        {
+            ghost.BackHomeAStar(node);
+        }
+
 
         if (eaten && ghost.path.Count > 0 && node.gameObject.layer == LayerMask.NameToLayer("Node"))
         {
@@ -205,7 +196,6 @@ public class GhostFrightened : GhostBehavior
                 ghost.movement.SetDirection(ghost.path[0]);
                 ghost.path.RemoveAt(0);
             }
-
         }
     }
 

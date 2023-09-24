@@ -141,7 +141,6 @@ public class GhostChase : GhostBehavior
 
                 float distance;
 
-                Debug.Log(distanceToPacman);
 
                 if (distanceToPacman < 8f)
                 {

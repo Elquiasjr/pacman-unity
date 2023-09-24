@@ -9,6 +9,9 @@ public class GameManager : MonoBehaviour
     public Transform pellets;
 
     public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI livesText;
+
+    public int currentScene;
 
     public int ghostMultiplier { get; private set; } = 1;
 
@@ -78,6 +81,7 @@ public class GameManager : MonoBehaviour
     private void SetLives(int lives)
     {
         this.lives = lives;
+        livesText.text = $"Lives: {lives}";
     }
 
     public void GhostEaten(Ghost ghost)
@@ -111,7 +115,14 @@ public class GameManager : MonoBehaviour
         {
             pacman.gameObject.SetActive(false);
             Invoke(nameof(NewRound), 3.0f);
-            SceneManager.LoadScene(1, LoadSceneMode.Single);
+            if (currentScene == 2)
+            {
+                SceneManager.LoadScene(0, LoadSceneMode.Single);
+            }
+            else
+            {
+                SceneManager.LoadScene(currentScene + 1, LoadSceneMode.Single);
+            }
         }
     }
 
