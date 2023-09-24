@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI livesText;
 
+    public TextMeshProUGUI levelText;
+
     public int currentScene;
 
     public int ghostMultiplier { get; private set; } = 1;
@@ -34,6 +36,7 @@ public class GameManager : MonoBehaviour
 
     private void NewGame()
     {
+        levelText.text = $"Level: {currentScene + 1}";
         SetLives(3);
         SetScore(0);
         NewRound();

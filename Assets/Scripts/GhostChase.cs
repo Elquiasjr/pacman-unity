@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GhostChase : GhostBehavior
@@ -42,8 +43,9 @@ public class GhostChase : GhostBehavior
         {
             Vector2 direction = Vector2.zero;
             float minDistance = float.MaxValue;
-
-            foreach (Vector2 avaliableDirection in node.availableDirections)
+            List<Vector2> availableDirections = new(node.availableDirections);
+            availableDirections.Remove(ghost.movement.direction * -1);
+            foreach (Vector2 avaliableDirection in availableDirections)
             {
                 Vector3 newPosition = transform.position + new Vector3(avaliableDirection.x, avaliableDirection.y, 0f);
 
@@ -72,8 +74,9 @@ public class GhostChase : GhostBehavior
         {
             Vector2 direction = Vector2.zero;
             float minDistance = float.MaxValue;
-
-            foreach (Vector2 avaliableDirection in node.availableDirections)
+            List<Vector2> availableDirections = new(node.availableDirections);
+            availableDirections.Remove(ghost.movement.direction * -1);
+            foreach (Vector2 avaliableDirection in availableDirections)
             {
                 Vector3 newPosition = transform.position + new Vector3(avaliableDirection.x, avaliableDirection.y, 0f);
 
@@ -105,8 +108,9 @@ public class GhostChase : GhostBehavior
         {
             Vector2 direction = Vector2.zero;
             float minDistance = float.MaxValue;
-
-            foreach (Vector2 avaliableDirection in node.availableDirections)
+            List<Vector2> availableDirections = new(node.availableDirections);
+            availableDirections.Remove(ghost.movement.direction * -1);
+            foreach (Vector2 avaliableDirection in availableDirections)
             {
                 Vector3 newPosition = transform.position + new Vector3(avaliableDirection.x, avaliableDirection.y, 0f);
 
@@ -131,8 +135,9 @@ public class GhostChase : GhostBehavior
         {
             Vector2 direction = Vector2.zero;
             float minDistance = float.MaxValue;
-
-            foreach (Vector2 avaliableDirection in node.availableDirections)
+            List<Vector2> availableDirections = new(node.availableDirections);
+            availableDirections.Remove(ghost.movement.direction * -1);
+            foreach (Vector2 avaliableDirection in availableDirections)
             {
                 Vector3 newPosition = transform.position + new Vector3(avaliableDirection.x, avaliableDirection.y, 0f);
 

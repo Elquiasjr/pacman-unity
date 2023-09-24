@@ -52,6 +52,59 @@ public struct LineDrawer
         lineRenderer.SetPosition(1, end);
     }
 
+    public void DrawCircleInGameView(Vector3 center, float radius, Color color)
+    {
+        if (lineRenderer == null)
+        {
+            init(0.2f);
+        }
+
+        lineRenderer.startColor = color;
+        lineRenderer.endColor = color;
+
+        lineRenderer.startWidth = lineSize;
+        lineRenderer.endWidth = lineSize;
+
+        float theta_scale = 0.1f;             //Set lower to add more points
+        int size = (int)((1f / theta_scale) + 1f); //Total number of points in circle.
+
+        lineRenderer.positionCount = size; //Plus one makes up for the circle to be continuous
+
+        //lineRenderer.SetColors(color, color);
+
+        float theta = 0f;
+        for (int i = 0; i < size + 1; i++)
+        {
+            theta += (2.0f * Mathf.PI * theta_scale);
+            float x = radius * Mathf.Cos(theta);
+            float y = radius * Mathf.Sin(theta);
+
+            x += center.x;
+            y += center.y;
+
+            Vector3 pos = new Vector3(x, y, center.z);
+
+            lineRenderer.SetPosition(i, pos);
+        }
+    }
+
+    public void DrawPointInGameView(Vector3 center, Color color)
+    {
+        if (lineRenderer == null)
+        {
+            init(0.2f);
+        }
+
+        lineRenderer.startColor = color;
+        lineRenderer.endColor = color;
+
+        lineRenderer.startWidth = lineSize;
+        lineRenderer.endWidth = lineSize;
+
+        lineRenderer.positionCount = 1;
+
+        lineRenderer.SetPosition(0, center);
+    }
 
     public void Destroy()
     {

@@ -82,7 +82,6 @@ public class Ghost : MonoBehaviour
 
         tree.setRoot(current);
         bool find = false;
-        int i = 0;
 
         if (current != null && enabled)
         {
@@ -107,6 +106,7 @@ public class Ghost : MonoBehaviour
 
                         nextNode.parent = current;
 
+
                         if (nextNode.hCost < 1)
                         {
                             find = true;
@@ -115,14 +115,12 @@ public class Ghost : MonoBehaviour
                     }
                 }
                 current = tree.getLeafs().First();
-                i++;
             }
 
             current = tree.getLeafs().First();
 
             while (current.parent != null)
             {
-
                 path.Add(current.directionTo);
                 current = current.parent;
             }
